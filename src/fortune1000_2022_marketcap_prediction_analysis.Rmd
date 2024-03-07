@@ -9,7 +9,7 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE, fig.path = "../src/figure")
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE, fig.path = "../figures/")
 ```
 
 
