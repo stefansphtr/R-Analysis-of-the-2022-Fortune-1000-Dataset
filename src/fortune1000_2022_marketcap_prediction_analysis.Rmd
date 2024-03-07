@@ -20,12 +20,42 @@ Fortune, an American Business Magazine, annually publishes the Fortune 500, a ra
 **The objective of this capstone project is** to analyze the 2022 Fortune 1000 firms in order **to make predictions regarding their market value**. The dataset is sourced from the Kaggle website: [2022 Fortune 1000](https://www.kaggle.com/datasets/winston56/fortune-500-data-2021/data). The **dataset provides updated U.S. firm data for the year 2022**, replacing the previous data from 2021.
 
 
+## load the libraries
+The following libraries will be used in this analysis:
+
+```{r load-packages, message=FALSE, warning=FALSE}
+# tidyverse: Collection of packages for data manipulation and visualization
+library(tidyverse)
+
+# knitr: Enables dynamic report generation
+library(knitr)
+
+# kableExtra: Helps build common complex tables and manipulate table styles
+library(kableExtra)
+
+# janitor: Provides simple tools for examining and cleaning dirty data
+library(janitor)
+
+# skimr: Provides summary statistics for data exploration
+library(skimr)
+
+# broom: Converts statistical analysis objects into tidy format
+library(broom)
+
+# car: Companion to Applied Regression, provides tools for regression analysis
+library(car)
+
+# MASS: Support functions and datasets for Venables and Ripley's MASS
+library(MASS)
+
+# modelr: Provides functions for modelling that help with data tidying
+library(modelr)
+```
+
 ## Business Questions
 The following are the business questions that will be addressed in this analysis:
 
 ```{r table business question, echo=FALSE}
-library(knitr)
-library(kableExtra)
 table <- data.frame(
   'No.' = c(1, 2, 3),
   'Business_Question' = c(
