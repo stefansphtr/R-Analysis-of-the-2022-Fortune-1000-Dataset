@@ -13,3 +13,11 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE, fig.path = 
 ```
 
 
+## Introduction
+Fortune, an American Business Magazine, annually publishes the Fortune 500, a ranking of the top 500 firms based on their income. **This dataset comprises the complete Fortune 1000, rather than solely the top 500**.
+
+
+**The objective of this capstone project is** to analyze the 2022 Fortune 1000 firms in order **to make predictions regarding their market value**. The dataset is sourced from the Kaggle website: [2022 Fortune 1000](https://www.kaggle.com/datasets/winston56/fortune-500-data-2021/data). The **dataset provides updated U.S. firm data for the year 2022**, replacing the previous data from 2021.
+
+
+
