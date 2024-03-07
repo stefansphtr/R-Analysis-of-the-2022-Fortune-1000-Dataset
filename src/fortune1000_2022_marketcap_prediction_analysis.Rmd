@@ -20,4 +20,28 @@ Fortune, an American Business Magazine, annually publishes the Fortune 500, a ra
 **The objective of this capstone project is** to analyze the 2022 Fortune 1000 firms in order **to make predictions regarding their market value**. The dataset is sourced from the Kaggle website: [2022 Fortune 1000](https://www.kaggle.com/datasets/winston56/fortune-500-data-2021/data). The **dataset provides updated U.S. firm data for the year 2022**, replacing the previous data from 2021.
 
 
+## Business Questions
+The following are the business questions that will be addressed in this analysis:
+
+```{r table business question, echo=FALSE}
+library(knitr)
+library(kableExtra)
+table <- data.frame(
+  'No.' = c(1, 2, 3),
+  'Business_Question' = c(
+    'How can we accurately predict the market cap of companies entering the Fortune 1000 list for the first time (Newcomer="yes") based on the available data from the previous year (2022)?',
+    'How can we predict the future market cap of companies already present on the 2022 Fortune 1000 list (Newcomer="no") by analyzing the changes in their financial metrics like revenue, profit, and number of employees, along with other factors like rank change, CEO demographics, and sector?',
+    'What are the key factors (financial, company-related, or others) that have the most significant influence on the market cap of companies within different sectors present in the Fortune 1000 list?'
+  )
+)
+
+table %>%
+  kable("html") %>%
+  kable_styling(bootstrap_options = "striped", full_width = F) %>%
+  column_spec(1, bold = TRUE, border_right = TRUE) %>%
+  column_spec(2, bold = TRUE) %>%
+  row_spec(0, align = "c", bold = TRUE)
+```
+
+
 
