@@ -85,7 +85,24 @@ The dataset is loaded from the CSV file and stored in a dataframe called `fortun
 fortune_df <- read_csv("../data/Fortune_1000.csv")
 ```
 
+### Assessing the Data
+The following steps are taken to assess the dataset:
 
+1. **Data Structure**: The structure of the dataset is examined to understand the number of rows and columns, as well as the data types of the columns.
+
+2. **Summary Statistics**: The summary statistics of the dataset are examined to understand the distribution of the data.
+
+3. **Missing Values**: The presence of missing values in the dataset is checked.
+
+4. **Duplicate Rows**: The presence of duplicate rows in the dataset is checked.
+
+5. **Column Names**: The column names are examined to ensure they are consistent and easy to work with.
+
+6. **Unique Values**: The unique values of the categorical columns are examined to understand the different categories present in the dataset.
+
+7. **Outliers**: The presence of outliers in the numerical columns is checked.
+
+8. **Data Quality**: The overall quality of the dataset is assessed.
 
 
 
