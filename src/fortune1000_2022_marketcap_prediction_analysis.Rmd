@@ -156,6 +156,34 @@ The column names are not consistent and contain spaces and special characters. T
 
 6. **Unique Values**: The unique values of the categorical columns are examined to understand the different categories present in the dataset.
 
+To check the unique values of the categorical columns, the `unique()` function is used to display the unique values of the `Sector` and `Industry` columns.
+
+```{r sector-unique-values, echo=TRUE}
+# Display the unique values of the Sector Industry columns
+unique_sector <- fortune_df %>% 
+  distinct(sector)
+
+unique_sector %>% kable()
+```
+
+```{r city-unique-values, echo=TRUE}
+# Display the unique values of the City column
+# unique_city <- fortune_df %>% 
+#   distinct(city)
+# 
+# unique_city %>% kable()
+```
+
+```{r state-unique-values, echo=TRUE}
+# Display the unique values of the State column
+unique_state <- fortune_df %>% 
+  distinct(state)
+
+unique_state %>% kable()
+```
+
+
+
 7. **Outliers**: The presence of outliers in the numerical columns is checked.
 
 8. **Data Quality**: The overall quality of the dataset is assessed.
