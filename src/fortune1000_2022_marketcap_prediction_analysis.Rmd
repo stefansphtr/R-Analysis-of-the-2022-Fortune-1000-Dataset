@@ -113,6 +113,21 @@ skim_without_charts(fortune_df)
 
 2. **Missing Values**: The presence of missing values in the dataset is checked.
 
+The summary data table shows that there are **Two column that have missing values** in the data type character and there are **Three columns that have missing values** from the data type numeric.
+
+The columns from data type character with missing values are:
+- `Ticker`: 49 missing value
+- `Market Cap`: 1 missing value
+
+`Ticker` **is the unique symbol of publicly traded** companies, so it is not a problem if there are **missing values in the ticker column, it means that company is a private company**. But, the `Market Cap` column is important for the analysis, so the missing value in this column needs to be handled.
+
+The columns from data type numeric with missing values are:
+- `profit`: 3 missing value
+- `num. of employees`: 1 missing value
+- `prev_rank`: 531 missing value
+
+`prev_rank` indicates the previous rank of the company, so it is not a problem if there are **missing values in the prev_rank column, it means that company is not listed in the top 500 companies last year**. But, the `profit` and `num. of employees` columns are important for the analysis, so the missing value in these columns needs to be handled.
+
 3. **Duplicate Rows**: The presence of duplicate rows in the dataset is checked.
 
 4. **Column Names**: The column names are examined to ensure they are consistent and easy to work with.
