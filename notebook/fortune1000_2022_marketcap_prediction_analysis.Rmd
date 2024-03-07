@@ -2,7 +2,10 @@
 title: "R Analysis of the 2022 Fortune 1000 for Market Cap Prediction"
 author: "Stefanus Bernard Melkisedek"
 date: "2024-03-07"
-output: html_document
+output: 
+    prettydoc::html_pretty:
+        theme: leonids
+        highlight: github
 ---
 
 ```{r setup, include=FALSE}
