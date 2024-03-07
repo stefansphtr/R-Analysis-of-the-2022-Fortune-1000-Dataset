@@ -147,11 +147,18 @@ print(glue::glue("The number of duplicate rows in the dataset is {duplicate_rows
 
 4. **Column Names**: The column names are examined to ensure they are consistent and easy to work with.
 
-5. **Unique Values**: The unique values of the categorical columns are examined to understand the different categories present in the dataset.
+The column names are not consistent and contain spaces and special characters. The column names with these criteria are as follows:
+   - `num. of employees`
+   - `CEO`
+   - `Website`
+   - `Ticker`
+   - `Market Cap`
 
-6. **Outliers**: The presence of outliers in the numerical columns is checked.
+1. **Unique Values**: The unique values of the categorical columns are examined to understand the different categories present in the dataset.
 
-7. **Data Quality**: The overall quality of the dataset is assessed.
+2. **Outliers**: The presence of outliers in the numerical columns is checked.
+
+3. **Data Quality**: The overall quality of the dataset is assessed.
 
 
 
