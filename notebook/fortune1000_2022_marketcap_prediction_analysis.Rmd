@@ -4,7 +4,7 @@ author: "Stefanus Bernard Melkisedek"
 date: "2024-03-07"
 output: 
     prettydoc::html_pretty:
-        theme: leonids
+        theme: cayman
         highlight: github
 ---
 
