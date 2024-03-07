@@ -55,8 +55,9 @@ library(modelr)
 ## Business Questions
 The following are the business questions that will be addressed in this analysis:
 
-```{r table business question, echo=FALSE}
-table <- data.frame(
+```{r table-business-question, echo=FALSE}
+# Define the business questions
+business_questions <- data.frame(
   'No.' = c(1, 2, 3),
   'Business_Question' = c(
     'How can we accurately predict the market cap of companies entering the Fortune 1000 list for the first time (Newcomer="yes") based on the available data from the previous year (2022)?',
@@ -65,7 +66,8 @@ table <- data.frame(
   )
 )
 
-table %>%
+# Create the table
+business_questions %>%
   kable("html") %>%
   kable_styling(bootstrap_options = "striped", full_width = F) %>%
   column_spec(1, bold = TRUE) %>%
