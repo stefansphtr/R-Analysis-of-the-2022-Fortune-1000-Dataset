@@ -186,6 +186,35 @@ unique_state %>% kable()
 
 7. **Outliers**: The presence of outliers in the numerical columns is checked.
 
+To check for outliers in the numerical columns, the `boxplot()` function is used to create boxplots for the `revenue`, `profit`, and `num. of employees` columns.
+
+```{r boxplot-revenue, echo=TRUE}
+# Create a boxplot for the revenue column
+ggplot(data = fortune_df) + 
+  geom_boxplot(mapping = aes(x = revenue), colour = "#15925e") +
+  labs(title = "Boxplot of Revenue") +
+  theme(
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.background = element_blank(),
+  )
+```
+
+```{r boxplot-profit, echo=TRUE}
+# Create a boxplot for the profit column
+ggplot(data = fortune_df) + 
+  geom_boxplot(mapping = aes(x = profit), colour = "#15925e") +
+  labs(title = "Boxplot of Profit") +
+  theme(
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.background = element_blank(),
+  )
+```
+
+From the `profit` and revenue `boxplot`, we could conclude that there are some company with a very high revenue and profit. But, it is not an outlier, because it is a common thing in the business world. So, we could conclude that there are no outliers in the revenue and profit columns.
+
+
 8. **Data Quality**: The overall quality of the dataset is assessed.
 
 
