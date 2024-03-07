@@ -75,5 +75,19 @@ business_questions %>%
   row_spec(0, align = "c", bold = TRUE)
 ```
 
+## Data Wrangling
+
+### Gathering the Data
+The dataset is loaded from the CSV file and stored in a dataframe called `fortune_df`.
+
+```{r load-data, echo=TRUE}
+# Load the dataset
+fortune_df <- read_csv("../data/Fortune_1000.csv")
+```
+
+
+
+
+
 
 
