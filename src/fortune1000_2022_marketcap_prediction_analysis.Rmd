@@ -242,3 +242,92 @@ assessment_df <- data.frame(
 assessment_df %>% kable()
 ```
 
+### Cleaning the Data
+
+The following steps are taken to clean the dataset:
+
+1. **Handling the column names**
+
+```{r column-names, echo=TRUE}
+# Clean the column names with janitor
+fortune_df <- fortune_df %>% 
+  clean_names()
+
+# Check the cleaned column names
+colnames(fortune_df)
+```
+
+
+2. **Handling the data types**
+
+```{r data-types, echo=TRUE}
+# Convert the Market Cap column to a double data type
+fortune_df <- fortune_df %>% 
+  mutate(market_cap = as.numeric(market_cap))
+
+# Check if the data type of the Market Cap column has been converted
+data_type_market_cap <- class(fortune_df$market_cap)
+glue::glue("The data type of the Market Cap column is {data_type_market_cap}.")
+```
+
+
+3. **Handling the missing value**
+
+```{r missing-value-profit, echo=TRUE}
+# View the records with missing values in the profit feature
+fortune_df %>% 
+  filter(is.na(profit)) %>% 
+  kable()
+
+# Fill the missing values in the profit column with the median value
+fortune_df <- fortune_df %>% 
+  mutate(profit = ifelse(is.na(profit), median(profit, na.rm = TRUE), profit))
+
+# Check if the missing values in the profit column have been handled
+missing_values_profit <- sum(is.na(fortune_df$profit))
+glue::glue("The number of missing values in the profit column is {missing_values_profit}.")
+```
+
+
+```{r missing-value-employees, echo=TRUE}
+# View the records with missing values in the num_of_employees feature
+fortune_df %>% 
+  filter(is.na(num_of_employees)) %>%
+  kable()
+```
+As we can see, there is no ticker(stock ticker symbol) in the `Univision Communications` company that tells this is a private company, so we could fill the missing value in the `num_of_employees` column with 0 
+
+```{r fill-missing-value-employees, echo=TRUE}
+# Fill the missing values in the num_of_employees column with 0
+fortune_df <- fortune_df %>% 
+  mutate(num_of_employees = ifelse(is.na(num_of_employees), 0, num_of_employees))
+
+# Check if the missing values in the num_of_employees column have been handled
+missing_values_employees <- sum(is.na(fortune_df$num_of_employees))
+glue::glue("The number of missing values in the num_of_employees column is {missing_values_employees}.")
+```
+
+```{r missing-value-market-cap, echo=TRUE}
+# View the records with missing values in the Market Cap feature
+fortune_df %>% 
+  filter(is.na(market_cap)) %>% 
+  kable()
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
