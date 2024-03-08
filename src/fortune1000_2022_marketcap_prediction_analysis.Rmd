@@ -699,8 +699,12 @@ distributed? Are there any outliers that might require further
 investigation?
 
 ```{r existing-market-cap-distribution, echo=TRUE}
+# Create the variable of existing_df for the existing companies
+existing_df <- fortune_df %>% 
+  filter(newcomer == "no")
+
 # Create a histogram for the market cap of existing companies
-ggplot(data = fortune_df) +
+ggplot(data = existing_df) +
   geom_histogram(mapping = aes(x = market_cap), fill = "#15925e", color = "black") +
   labs(
     title = "Distribution of Market Cap for Existing Companies (Log Scale)",
@@ -715,10 +719,6 @@ ggplot(data = fortune_df) +
 ```
 
 ```{r existing-market-cap-boxplot, echo=TRUE}
-# Create the variable of existing_df for the existing companies
-existing_df <- fortune_df %>% 
-  filter(newcomer == "no")
-
 # Create a boxplot for the market cap of existing companies to identify outliers
 ggplot(data = existing_df) +
   geom_boxplot(mapping = aes(x = market_cap), fill = "#15925e", color = "black") +
