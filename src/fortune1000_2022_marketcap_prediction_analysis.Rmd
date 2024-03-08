@@ -776,3 +776,79 @@ well-known companies**, it is not an outlier. The same thing goes for
 the lowest 10 of existing companies with the lowest market cap, it is
 not an outlier. **So, there are no outliers that need further
 investigation**.
+
+
+Question 2: How do features like revenue, profit, and number of employees for companies entering the list for the first time (Newcomer="yes") compare to existing companies in terms of distribution?
+
+```{r compare-revenue-distribution, echo=TRUE}
+# Create the variable of new_entrants_df for the new entrants
+new_entrants_df <- fortune_df %>% 
+  filter(newcomer == "yes")
+
+# Compare the distribution of revenue for new entrants and existing companies
+ggplot(data = fortune_df) +
+  geom_histogram(aes(
+    x = revenue, 
+    fill = newcomer, 
+    color = newcomer,
+  ), alpha = 0.5) +
+  labs(
+    title = "Distribution of Revenue for New Entrants and Existing Company (Log Scale)",
+    x = "Revenue"
+  ) +
+  theme(
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.background = element_blank(),
+  ) +
+  scale_x_log10(label = scales::dollar)
+```
+
+```{r compare-profit-distribution, echo=TRUE}
+# Compare the distribution of profit for new entrants and existing companies
+ggplot(data = fortune_df) +
+  geom_histogram(aes(
+    x = profit, 
+    fill = newcomer, 
+    color = newcomer,
+  ), alpha = 0.5) +
+  labs(
+    title = "Distribution of Profit for New Entrants and Existing Company (Log Scale)",
+    x = "Profit"
+  ) +
+  theme(
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.background = element_blank(),
+  ) +
+  scale_x_log10(label = scales::dollar)
+```
+
+```{r compare-employees-distribution, echo=TRUE}
+# Compare the distribution of number of employees for new entrants and existing companies
+ggplot(data = fortune_df) +
+  geom_histogram(aes(
+    x = num_of_employees, 
+    fill = newcomer, 
+    color = newcomer,
+  ), alpha = 0.5) +
+  labs(
+    title = "Distribution of Number of Employees for New Entrants and Existing Company (Log Scale)",
+    x = "Number of Employees"
+  ) +
+  theme(
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.background = element_blank(),
+  ) +
+  scale_x_log10(label = scales::comma)
+```
+
+**Conclusion**:
+
+Based on the comparison distribution revenue, profit, and number of employees, we can conclude that between new entrants and existing companies, **there are significant differences in the distribution of these features. The distribution of revenue, profit, and number of employees for existing companies is dominating the distribution of new entrants.**
+
+
+
+
+
