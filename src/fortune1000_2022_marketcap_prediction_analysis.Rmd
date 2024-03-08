@@ -417,6 +417,35 @@ glue::glue("The number of invalid values in the ceo column is {invalid_values_ce
 ```
 
 
+```{r list-of-numeric-columns, echo=TRUE}
+# List of numeric columns
+numeric_columns <- fortune_df %>% 
+  dplyr::select(where(is.numeric)) %>% 
+  colnames()
+
+# View the column names of the numeric columns
+numeric_columns
+```
+For the final step, let's check the distribution of the columns `revenue`, `profit`, `num_of_employees`, and `market_cap` using the `ggplot2` packages.
+
+```{r distribution-revenue, echo=TRUE}
+# Create a histogram for the revenue column
+ggplot(data = fortune_df, aes(x = revenue)) +
+  geom_histogram(fill = "#15925e", color = "black") +
+  labs(
+    title = "Distribution of Revenue (Log Scale)",
+    x = "Revenue"
+  ) +
+  theme(
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.background = element_blank(),
+  ) +
+  scale_x_log10(label = scales::dollar)
+```
+The `scale_x_log10()` function transforms the x-axis using a logarithmic scale, which can be **useful when dealing with data that spans several orders of magnitude**. 
+
+**In a logarithmic scale**, the **distance from 1 to 10 is the same as the distance from 10 to 100**, or from 100 to 1000, and so on. This is because each step on the scale is a multiplication by 10, rather than an addition. 
 
 
 
