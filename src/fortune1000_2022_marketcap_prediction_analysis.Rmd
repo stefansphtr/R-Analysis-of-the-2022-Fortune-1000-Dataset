@@ -190,7 +190,7 @@ To check for outliers in the numerical columns, the `boxplot()` function is used
 
 ```{r boxplot-revenue, echo=TRUE}
 # Create a boxplot for the revenue column
-ggplot(data = fortune_df) + 
+ggplot(data = fortune_df) +
   geom_boxplot(mapping = aes(x = revenue), colour = "#15925e") +
   labs(title = "Boxplot of Revenue") +
   theme(
@@ -307,21 +307,24 @@ missing_values_employees <- sum(is.na(fortune_df$num_of_employees))
 glue::glue("The number of missing values in the num_of_employees column is {missing_values_employees}.")
 ```
 
-```{r missing-value-market-cap, echo=TRUE}
-# View the records with missing values in the Market Cap feature
-fortune_df %>% 
-  filter(is.na(market_cap)) %>% 
-  kable()
+```{r missing-value-ticker, echo=TRUE}
+# Check the missing values in the Ticker feature
+missing_values_ticker <- fortune_df %>% 
+  filter(is.na(ticker)) %>%
+  nrow()
+
+glue::glue("The number of missing values in the Ticker column is {missing_values_ticker}.")
 ```
 
+```{r fill-missing-value-ticker, echo=TRUE}
+# Fill the missing values in the Ticker column with "Private"
+fortune_df <- fortune_df %>% 
+  mutate(ticker = ifelse(is.na(ticker), "Private", ticker))
 
-
-
-
-
-
-
-
+# Check if the missing values in the Ticker column have been handled
+missing_values_ticker <- sum(is.na(fortune_df$ticker))
+glue::glue("The number of missing values in the Ticker column is {missing_values_ticker}.")
+```
 
 
 
