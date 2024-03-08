@@ -326,6 +326,26 @@ missing_values_ticker <- sum(is.na(fortune_df$ticker))
 glue::glue("The number of missing values in the Ticker column is {missing_values_ticker}.")
 ```
 
+```{r missing-value-prev-rank, echo=TRUE}
+# Check again the number of missing values in the prev_rank column
+missing_values_prev_rank <- fortune_df %>% 
+  filter(is.na(prev_rank)) %>%
+  nrow()
+
+glue::glue("The number of missing values in the prev_rank column is {missing_values_prev_rank}.")
+```
+
+```{r fill-missing-value-prev-rank, echo=TRUE}
+# Fill the missing values in the prev_rank column with 0
+fortune_df <- fortune_df %>% 
+  mutate(prev_rank = ifelse(is.na(prev_rank), 0, prev_rank))
+
+# Check if the missing values in the prev_rank column have been handled
+missing_values_prev_rank <- sum(is.na(fortune_df$prev_rank))
+glue::glue("The number of missing values in the prev_rank column is {missing_values_prev_rank}.")
+```
+
+
 
 
 
