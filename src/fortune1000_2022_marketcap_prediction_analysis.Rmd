@@ -12,15 +12,22 @@ output:
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE, fig.path = "../figures/")
 ```
 
-
 ## Introduction
-Fortune, an American Business Magazine, annually publishes the Fortune 500, a ranking of the top 500 firms based on their income. **This dataset comprises the complete Fortune 1000, rather than solely the top 500**.
 
+Fortune, an American Business Magazine, annually publishes the Fortune
+500, a ranking of the top 500 firms based on their income. **This
+dataset comprises the complete Fortune 1000, rather than solely the top
+500**.
 
-**The objective of this capstone project is** to analyze the 2022 Fortune 1000 firms in order **to make predictions regarding their market value**. The dataset is sourced from the Kaggle website: [2022 Fortune 1000](https://www.kaggle.com/datasets/winston56/fortune-500-data-2021/data). The **dataset provides updated U.S. firm data for the year 2022**, replacing the previous data from 2021.
-
+**The objective of this capstone project is** to analyze the 2022
+Fortune 1000 firms in order **to make predictions regarding their market
+value**. The dataset is sourced from the Kaggle website: [2022 Fortune
+1000](https://www.kaggle.com/datasets/winston56/fortune-500-data-2021/data).
+The **dataset provides updated U.S. firm data for the year 2022**,
+replacing the previous data from 2021.
 
 ## load the libraries
+
 The following libraries will be used in this analysis:
 
 ```{r load-packages, message=FALSE, warning=FALSE}
@@ -53,7 +60,9 @@ library(modelr)
 ```
 
 ## Business Questions
-The following are the business questions that will be addressed in this analysis:
+
+The following are the business questions that will be addressed in this
+analysis:
 
 ```{r table-business-question, echo=FALSE}
 # Define the business questions
@@ -78,7 +87,9 @@ business_questions %>%
 ## Data Wrangling
 
 ### Gathering the Data
-The dataset is loaded from the CSV file and stored in a dataframe called `fortune_df`.
+
+The dataset is loaded from the CSV file and stored in a dataframe called
+`fortune_df`.
 
 ```{r load-data, echo=TRUE}
 # Load the dataset
@@ -86,9 +97,12 @@ fortune_df <- read_csv("../data/Fortune_1000.csv")
 ```
 
 ### Assessing the Data
+
 The following steps are taken to assess the dataset:
 
-1. **Data Structure**: The structure of the dataset is examined to understand the number of rows and columns, as well as the data types of the columns.
+1.  **Data Structure**: The structure of the dataset is examined to
+    understand the number of rows and columns, as well as the data types
+    of the columns.
 
 ```{r head-fortune-df, echo=TRUE}
 # Display the first six rows of the dataset
@@ -100,37 +114,55 @@ head(fortune_df)
 str(fortune_df)
 ```
 
-As we can see from the data structures, this **dataset contains 1000 rows and 18 columns**, with a mix of numerical and categorical data types. 
+As we can see from the data structures, this **dataset contains 1000
+rows and 18 columns**, with a mix of numerical and categorical data
+types.
 
-**Based on the data types of the columns**, there is one column that needs to be converted to a double data type. The `Market Cap` column is **currently a character data type**, but **it should be a double data type**.
+**Based on the data types of the columns**, there is one column that
+needs to be converted to a double data type. The `Market Cap` column is
+**currently a character data type**, but **it should be a double data
+type**.
 
-2. **Summary Statistics**: The summary statistics of the dataset are examined to understand the distribution of the data.
+2.  **Summary Statistics**: The summary statistics of the dataset are
+    examined to understand the distribution of the data.
 
 ```{r summary-statistics, echo=TRUE}
 # Display the summary statistics of the dataset
 skim_without_charts(fortune_df)
 ```
 
-3. **Missing Values**: The presence of missing values in the dataset is checked.
+3.  **Missing Values**: The presence of missing values in the dataset is
+    checked.
 
-The summary data table shows that there are **Two column that have missing values** in the data type character and there are **Three columns that have missing values** from the data type numeric.
+The summary data table shows that there are **Two column that have
+missing values** in the data type character and there are **Three
+columns that have missing values** from the data type numeric.
 
-The columns from data type character with missing values are:
-   - `Ticker`: 49 missing value
-   - `Market Cap`: 1 missing value
+The columns from data type character with missing values are: -
+`Ticker`: 49 missing value - `Market Cap`: 1 missing value
 
-`Ticker` **is the unique symbol of publicly traded** companies, so it is not a problem if there are **missing values in the ticker column, it means that company is a private company**. But, the `Market Cap` column is important for the analysis, so the missing value in this column needs to be handled.
+`Ticker` **is the unique symbol of publicly traded** companies, so it is
+not a problem if there are **missing values in the ticker column, it
+means that company is a private company**. But, the `Market Cap` column
+is important for the analysis, so the missing value in this column needs
+to be handled.
 
-The columns from data type numeric with missing values are:
-- `profit`: 3 missing value
-- `num. of employees`: 1 missing value
-- `prev_rank`: 531 missing value
+The columns from data type numeric with missing values are: - `profit`:
+3 missing value - `num. of employees`: 1 missing value - `prev_rank`:
+531 missing value
 
-`prev_rank` indicates the previous rank of the company, so it is not a problem if there are **missing values in the prev_rank column, it means that company is not listed in the top 500 companies last year**. But, the `profit` and `num. of employees` columns are important for the analysis, so the missing value in these columns needs to be handled.
+`prev_rank` indicates the previous rank of the company, so it is not a
+problem if there are **missing values in the prev_rank column, it means
+that company is not listed in the top 500 companies last year**. But,
+the `profit` and `num. of employees` columns are important for the
+analysis, so the missing value in these columns needs to be handled.
 
-4. **Duplicate Rows**: The presence of duplicate rows in the dataset is checked.
+4.  **Duplicate Rows**: The presence of duplicate rows in the dataset is
+    checked.
 
-To see the duplicate rows in the dataset, the `duplicated()` function is used to check for duplicate rows. The result shows that there are no duplicate rows in the dataset.
+To see the duplicate rows in the dataset, the `duplicated()` function is
+used to check for duplicate rows. The result shows that there are no
+duplicate rows in the dataset.
 
 ```{r duplicate-rows, echo=TRUE}
 # Check for duplicate rows
@@ -143,20 +175,23 @@ duplicate_rows <- fortune_df[duplicated(fortune_df), ] %>% nrow()
 print(glue::glue("The number of duplicate rows in the dataset is {duplicate_rows}."))
 ```
 
-**There are no duplicate rows** in the dataset, so let's move on to the next step.
+**There are no duplicate rows** in the dataset, so let's move on to the
+next step.
 
-5. **Column Names**: The column names are examined to ensure they are consistent and easy to work with.
+5.  **Column Names**: The column names are examined to ensure they are
+    consistent and easy to work with.
 
-The column names are not consistent and contain spaces and special characters. The column names with these criteria are as follows:
-   - `num. of employees`
-   - `CEO`
-   - `Website`
-   - `Ticker`
-   - `Market Cap`
+The column names are not consistent and contain spaces and special
+characters. The column names with these criteria are as follows: -
+`num. of employees` - `CEO` - `Website` - `Ticker` - `Market Cap`
 
-6. **Unique Values**: The unique values of the categorical columns are examined to understand the different categories present in the dataset.
+6.  **Unique Values**: The unique values of the categorical columns are
+    examined to understand the different categories present in the
+    dataset.
 
-To check the unique values of the categorical columns, the `unique()` function is used to display the unique values of the `Sector` and `Industry` columns.
+To check the unique values of the categorical columns, the `unique()`
+function is used to display the unique values of the `Sector` and
+`Industry` columns.
 
 ```{r sector-unique-values, echo=TRUE}
 # Display the unique values of the Sector Industry columns
@@ -182,11 +217,12 @@ unique_state <- fortune_df %>%
 unique_state %>% kable()
 ```
 
+7.  **Outliers**: The presence of outliers in the numerical columns is
+    checked.
 
-
-7. **Outliers**: The presence of outliers in the numerical columns is checked.
-
-To check for outliers in the numerical columns, the `boxplot()` function is used to create boxplots for the `revenue`, `profit`, and `num. of employees` columns.
+To check for outliers in the numerical columns, the `boxplot()` function
+is used to create boxplots for the `revenue`, `profit`, and
+`num. of employees` columns.
 
 ```{r boxplot-revenue, echo=TRUE}
 # Create a boxplot for the revenue column
@@ -212,16 +248,19 @@ ggplot(data = fortune_df) +
   )
 ```
 
-From the `profit` and revenue `boxplot`, we could conclude that there are some company with a very high revenue and profit. But, it is not an outlier, because it is a common thing in the business world. So, we could conclude that there are no outliers in the revenue and profit columns.
+From the `profit` and revenue `boxplot`, we could conclude that there
+are some company with a very high revenue and profit. But, it is not an
+outlier, because it is a common thing in the business world. So, we
+could conclude that there are no outliers in the revenue and profit
+columns.
 
-
-8. **Data Quality**: The overall quality of the dataset is assessed.
+8.  **Data Quality**: The overall quality of the dataset is assessed.
 
 The assessment of the dataset is summarized in the table below:
 
 **Table of Summary Assessment**
 
-``` {r summary-assessment, echo=TRUE}
+```{r summary-assessment, echo=TRUE}
 # Check for missing values
 missing_values <- vapply(fortune_df, function(x) sum(is.na(x)), FUN.VALUE = numeric(1))
 
@@ -246,7 +285,7 @@ assessment_df %>% kable()
 
 The following steps are taken to clean the dataset:
 
-1. **Handling the column names**
+1.  **Handling the column names**
 
 ```{r column-names, echo=TRUE}
 # Clean the column names with janitor
@@ -257,8 +296,7 @@ fortune_df <- fortune_df %>%
 colnames(fortune_df)
 ```
 
-
-2. **Handling the data types**
+2.  **Handling the data types**
 
 ```{r data-types, echo=TRUE}
 # Convert the Market Cap column to a double data type
@@ -270,8 +308,7 @@ data_type_market_cap <- class(fortune_df$market_cap)
 glue::glue("The data type of the Market Cap column is {data_type_market_cap}.")
 ```
 
-
-3. **Handling the missing value**
+3.  **Handling the missing value**
 
 ```{r missing-value-profit, echo=TRUE}
 # View the records with missing values in the profit feature
@@ -288,14 +325,17 @@ missing_values_profit <- sum(is.na(fortune_df$profit))
 glue::glue("The number of missing values in the profit column is {missing_values_profit}.")
 ```
 
-
 ```{r missing-value-employees, echo=TRUE}
 # View the records with missing values in the num_of_employees feature
 fortune_df %>% 
   filter(is.na(num_of_employees)) %>%
   kable()
 ```
-As we can see, there is no ticker(stock ticker symbol) in the `Univision Communications` company that tells this is a private company, so we could fill the missing value in the `num_of_employees` column with 0 
+
+As we can see, there is no ticker(stock ticker symbol) in the
+`Univision Communications` company that tells this is a private company,
+so we could fill the missing value in the `num_of_employees` column with
+0
 
 ```{r fill-missing-value-employees, echo=TRUE}
 # Fill the missing values in the num_of_employees column with 0
@@ -362,14 +402,18 @@ fortune_df <- fortune_df %>%
 missing_values_market_cap <- sum(is.na(fortune_df$market_cap))
 glue::glue("The number of missing values in the Market Cap column is {missing_values_market_cap}.")
 ```
-Now, let's check again for the overall missing values using the skimr package.
+
+Now, let's check again for the overall missing values using the skimr
+package.
 
 ```{r missing-values-overall, echo=TRUE}
 # Display the summary statistics of the dataset
 skim_without_charts(fortune_df)
 ```
 
-Since the unique values of the ceo feature is 994, It seems that there are duplicate values in the ceo feature. Let's check for the duplicate values in the ceo feature.
+Since the unique values of the ceo feature is 994, It seems that there
+are duplicate values in the ceo feature. Let's check for the duplicate
+values in the ceo feature.
 
 ```{r duplicate-values-ceo, echo=TRUE}
 # Check for duplicate values in the ceo feature
@@ -381,7 +425,9 @@ duplicate_ceo <- fortune_df %>%
 # Display the duplicate values in the ceo feature
 duplicate_ceo %>% kable()
 ```
-From the table above, we could see that `Elon Musk` and `Vincent T. Roche` are the CEO of two companies. 
+
+From the table above, we could see that `Elon Musk` and
+`Vincent T. Roche` are the CEO of two companies.
 
 Let's check it out first what companies are they leading.
 
@@ -393,9 +439,11 @@ fortune_df %>%
   kable()
 ```
 
-So, it is not a duplicate value, it is a common thing in the business world.
+So, it is not a duplicate value, it is a common thing in the business
+world.
 
-Next, we would like to check the ceo with name `#REF`. Let's check it out first what company is he leading.
+Next, we would like to check the ceo with name `#REF`. Let's check it
+out first what company is he leading.
 
 ```{r check-ceo-ref, echo=TRUE}
 # Check the company that the CEO with name #REF is leading
@@ -404,7 +452,12 @@ fortune_df %>%
   dplyr::filter(ceo == "#REF!") %>%
   kable()
 ```
-It seems there are companies with the CEO named `#REF!`, this would be causing by the The `#REF!` error typically **appears when a reference is not valid**. This is common in spreadsheet software like Excel, where it can occur if a formula refers to a cell that doesn't exist, usually because the cell's row or column has been deleted.
+
+It seems there are companies with the CEO named `#REF!`, this would be
+causing by the The `#REF!` error typically **appears when a reference is
+not valid**. This is common in spreadsheet software like Excel, where it
+can occur if a formula refers to a cell that doesn't exist, usually
+because the cell's row or column has been deleted.
 
 ```{r fill-missing-value-ceo, echo=TRUE}
 # Fill the missing values in the ceo column with "Unknown"
@@ -416,7 +469,6 @@ invalid_values_ceo <- sum(fortune_df$ceo == "#REF!")
 glue::glue("The number of invalid values in the ceo column is {invalid_values_ceo}.")
 ```
 
-
 ```{r list-of-numeric-columns, echo=TRUE}
 # List of numeric columns
 numeric_columns <- fortune_df %>% 
@@ -426,7 +478,10 @@ numeric_columns <- fortune_df %>%
 # View the column names of the numeric columns
 numeric_columns
 ```
-For the final step, let's check the distribution of the columns `revenue`, `profit`, `num_of_employees`, and `market_cap` using the `ggplot2` packages.
+
+For the final step, let's check the distribution of the columns
+`revenue`, `profit`, `num_of_employees`, and `market_cap` using the
+`ggplot2` packages.
 
 ```{r distribution-revenue, echo=TRUE}
 # Create a histogram for the revenue column
@@ -443,9 +498,15 @@ ggplot(data = fortune_df, aes(x = revenue)) +
   ) +
   scale_x_log10(label = scales::dollar)
 ```
-The `scale_x_log10()` function transforms the x-axis using a logarithmic scale, which can be **useful when dealing with data that spans several orders of magnitude**. 
 
-**In a logarithmic scale**, the **distance from 1 to 10 is the same as the distance from 10 to 100**, or from 100 to 1000, and so on. This is because each step on the scale is a multiplication by 10, rather than an addition. 
+The `scale_x_log10()` function transforms the x-axis using a logarithmic
+scale, which can be **useful when dealing with data that spans several
+orders of magnitude**.
+
+**In a logarithmic scale**, the **distance from 1 to 10 is the same as
+the distance from 10 to 100**, or from 100 to 1000, and so on. This is
+because each step on the scale is a multiplication by 10, rather than an
+addition.
 
 ```{r distribution-profit, echo=TRUE}
 # Create a histogram for the profit column
@@ -495,98 +556,147 @@ ggplot(data = fortune_df) +
   scale_x_log10(label = scales::comma)
 ```
 
-As we can see on the distribution of `revenue` there is a **left-skewed distribution**, it means that there are some companies with a very high revenue. The distribution of `profit` and `market_cap` also have a **left-skewed distribution**, it means that there are some companies with a very high profit and market cap.
+As we can see on the distribution of `revenue` there is a **left-skewed
+distribution**, it means that there are some companies with a very high
+revenue. The distribution of `profit` and `market_cap` also have a
+**left-skewed distribution**, it means that there are some companies
+with a very high profit and market cap.
 
-The distribution of `num_of_employees` have a **left-skewed distribution**, it means that there are some companies with a very high number of employees.
+The distribution of `num_of_employees` have a **left-skewed
+distribution**, it means that there are some companies with a very high
+number of employees.
 
 **Conclusion:**
 
-- The column names have been cleaned and are now consistent and easy to work with.
+-   The column names have been cleaned and are now consistent and easy
+    to work with.
 
-- The `Market Cap` column has been converted to a **double data type**.
+-   The `Market Cap` column has been converted to a **double data
+    type**.
 
-- The missing values in the `profit`, `num_of_employees`, `ticker`, `prev_rank`, and `market_cap` columns have been **handled**.
+-   The missing values in the `profit`, `num_of_employees`, `ticker`,
+    `prev_rank`, and `market_cap` columns have been **handled**.
 
-- The invalid values in the `ceo` column has been handled by filling the missing values with "Unknown".
+-   The invalid values in the `ceo` column has been handled by filling
+    the missing values with "Unknown".
 
-**Additional Note for the outlier in the `revenue`, `market_cap` and `profit` columns:**
+**Additional Note for the outlier in the `revenue`, `market_cap` and
+`profit` columns:**
 
-- The outlier in the `revenue`, `market_cap` and `profit` columns are not handled because it is a common thing in the business world.
-
+-   The outlier in the `revenue`, `market_cap` and `profit` columns are
+    not handled because it is a common thing in the business world.
 
 ## Exploratory Data Analysis
 
-list of interesting questions to be answered in the exploratory data analysis:
+list of interesting questions to be answered in the exploratory data
+analysis:
 
 **1. Predicting Market Cap of New Entrants (Newcomer="yes")**
 
-  - **Univariate Analysis**:
+-   **Univariate Analysis**:
 
-    • **Question**: How is the market cap of existing companies (Newcomer="no") distributed? Are there any outliers that might require further investigation?
-    
-    • **Question**: How do features like revenue, profit, and number of employees for companies entering the list for the first time (Newcomer="yes") compare to existing companies in terms of distribution?
-    
-    • **Question**: What does the distribution of rank change look like for companies that entered the list (Newcomer="yes")?
+    • **Question**: How is the market cap of existing companies
+    (Newcomer="no") distributed? Are there any outliers that might
+    require further investigation?
 
-  - **Bivariate Analysis**:
+    • **Question**: How do features like revenue, profit, and number of
+    employees for companies entering the list for the first time
+    (Newcomer="yes") compare to existing companies in terms of
+    distribution?
 
-    • **Question**: Is there a visual relationship between market cap and features like revenue, profit, and number of employees for established companies (Newcomer="no")?
-    
-    • **Question**: How does the rank change of new entrants relate to their market cap?
-    
-    • **Question**: Do these relationships between market cap and other features differ across various sectors? (Use boxplots or violin plots to compare market cap distribution)
+    • **Question**: What does the distribution of rank change look like
+    for companies that entered the list (Newcomer="yes")?
 
-  - **Multivariate Analysis**:
+-   **Bivariate Analysis**:
 
-    • **Question**: Can we build a machine learning model that accurately predicts the market cap of new entrants (Newcomer="yes") based on all available features (excluding Market Cap)?
-    
-    • **Question**: How well does this model perform in predicting market cap? Evaluate the model's accuracy using relevant metrics like R-squared or mean squared error.
+    • **Question**: Is there a visual relationship between market cap
+    and features like revenue, profit, and number of employees for
+    established companies (Newcomer="no")?
+
+    • **Question**: How does the rank change of new entrants relate to
+    their market cap?
+
+    • **Question**: Do these relationships between market cap and other
+    features differ across various sectors? (Use boxplots or violin
+    plots to compare market cap distribution)
+
+-   **Multivariate Analysis**:
+
+    • **Question**: Can we build a machine learning model that
+    accurately predicts the market cap of new entrants (Newcomer="yes")
+    based on all available features (excluding Market Cap)?
+
+    • **Question**: How well does this model perform in predicting
+    market cap? Evaluate the model's accuracy using relevant metrics
+    like R-squared or mean squared error.
 
 **2. Predicting Market Cap of Existing Companies (Newcomer="no")**
 
-  - **Univariate Analysis**:
+-   **Univariate Analysis**:
 
-    • **Question**: How have the market caps of existing companies changed between 2021 and 2022? What is the distribution of those changes?
-    
-    • **Question**: How have financial metrics like revenue, profit, and number of employees changed for existing companies between 2021 and 2022? Explore the distribution of these changes.
+    • **Question**: How have the market caps of existing companies
+    changed between 2021 and 2022? What is the distribution of those
+    changes?
 
-  - **Bivariate Analysis**:
+    • **Question**: How have financial metrics like revenue, profit, and
+    number of employees changed for existing companies between 2021 and
+    2022? Explore the distribution of these changes.
 
-    • **Question**: Is there a relationship between the change in market cap and the changes in features like revenue, profit, and number of employees for existing companies?
-    
-    • **Question**: How does the rank change of existing companies relate to their market cap change?
+-   **Bivariate Analysis**:
 
-  - **Multivariate Analysis**:
+    • **Question**: Is there a relationship between the change in market
+    cap and the changes in features like revenue, profit, and number of
+    employees for existing companies?
 
-    • **Question**: Can we build a regression model to predict the market cap change for existing companies based on changes in financial metrics and other relevant features (rank change, sector)?
-    
-    • **Question**: How well does this model perform in predicting the change in market cap for existing companies? Evaluate the model's performance using relevant metrics.
+    • **Question**: How does the rank change of existing companies
+    relate to their market cap change?
+
+-   **Multivariate Analysis**:
+
+    • **Question**: Can we build a regression model to predict the
+    market cap change for existing companies based on changes in
+    financial metrics and other relevant features (rank change, sector)?
+
+    • **Question**: How well does this model perform in predicting the
+    change in market cap for existing companies? Evaluate the model's
+    performance using relevant metrics.
 
 **3. Identifying Key Factors Influencing Market Cap**
 
-  - **Univariate Analysis**:
+-   **Univariate Analysis**:
 
-    • **Question**: How does the market cap of companies differ across different sectors based on their distribution?
+    • **Question**: How does the market cap of companies differ across
+    different sectors based on their distribution?
 
-  - **Bivariate Analysis**:
+-   **Bivariate Analysis**:
 
-    • **Question**: Are there significant differences in market cap distribution within different sectors? Use boxplots or violin plots for comparison.
-    
-    • **Question**: Within each sector, is there a relationship between market cap and categorical features like CEO demographics (CEO founder, CEO woman)?
+    • **Question**: Are there significant differences in market cap
+    distribution within different sectors? Use boxplots or violin plots
+    for comparison.
 
-  - **Multivariate Analysis**:
+    • **Question**: Within each sector, is there a relationship between
+    market cap and categorical features like CEO demographics (CEO
+    founder, CEO woman)?
 
-    • **Question**: Can we build separate regression models for each sector to predict market cap using relevant features (financial metrics, rank change, sector-specific factors)?
-    
-    • **Question**: By comparing the coefficients of these models across sectors, can we identify the most influential factors for market cap in each sector? 
+-   **Multivariate Analysis**:
 
+    • **Question**: Can we build separate regression models for each
+    sector to predict market cap using relevant features (financial
+    metrics, rank change, sector-specific factors)?
+
+    • **Question**: By comparing the coefficients of these models across
+    sectors, can we identify the most influential factors for market cap
+    in each sector?
 
 Now let's start jump in with the first question.
 
 ### Predicting Market Cap of New Entrants (Newcomer="yes")
 
 #### Univariate Analysis
-Question 1: How is the market cap of existing companies (Newcomer="no") distributed? Are there any outliers that might require further investigation?
+
+Question 1: How is the market cap of existing companies (Newcomer="no")
+distributed? Are there any outliers that might require further
+investigation?
 
 ```{r existing-market-cap-distribution, echo=TRUE}
 # Create a histogram for the market cap of existing companies
@@ -603,7 +713,6 @@ ggplot(data = fortune_df) +
   ) +
   scale_x_log10(label = scales::dollar)
 ```
-
 
 ```{r existing-market-cap-boxplot, echo=TRUE}
 # Create the variable of existing_df for the existing companies
@@ -625,7 +734,8 @@ ggplot(data = existing_df) +
   scale_x_log10(label = scales::dollar)
 ```
 
-The distribution of the market cap for existing companies is **left-skewed**, with a few companies having very high market caps.
+The distribution of the market cap for existing companies is
+**left-skewed**, with a few companies having very high market caps.
 
 Let's see the list of existing companies with the highest market cap.
 
@@ -638,9 +748,12 @@ highest_market_cap_companies <- existing_df %>%
 highest_market_cap_companies %>% kable()
 ```
 
-The top 10 of existing companies with the highest market cap are **Apple, Microsoft, Alphabet, Amazon,  Tesla, Berkshire Hathaway, UnitedHealth Group, Visa, Meta Platforms,  and Johnson & Johnson**.
+The top 10 of existing companies with the highest market cap are
+**Apple, Microsoft, Alphabet, Amazon, Tesla, Berkshire Hathaway,
+UnitedHealth Group, Visa, Meta Platforms, and Johnson & Johnson**.
 
-Next, we should check the list of existing companies with the lowest market cap.
+Next, we should check the list of existing companies with the lowest
+market cap.
 
 ```{r lowest-market-cap-companies, echo=TRUE}
 # List of companies with the lowest market cap
@@ -651,8 +764,15 @@ lowest_market_cap_companies <- existing_df %>%
 lowest_market_cap_companies %>% kable()
 ```
 
-The lowest 10 of existing companies with the lowest market cap are **Cooper-Standard Holdings, NGL Energy Partners, R.R. Donnelley & Sons, Yellow, Vroom, Hovnanian Enterprises, Quad/Graphics, Party City Holdco, Olympic Steel, and Sprague Resources**.
+The lowest 10 of existing companies with the lowest market cap are
+**Cooper-Standard Holdings, NGL Energy Partners, R.R. Donnelley & Sons,
+Yellow, Vroom, Hovnanian Enterprises, Quad/Graphics, Party City Holdco,
+Olympic Steel, and Sprague Resources**.
 
 **Conclusion:**
 
-Since **the top 10 of existing companies with the highest market cap are well-known companies**, it is not an outlier. The same thing goes for the lowest 10 of existing companies with the lowest market cap, it is not an outlier. **So, there are no outliers that need further investigation**.
+Since **the top 10 of existing companies with the highest market cap are
+well-known companies**, it is not an outlier. The same thing goes for
+the lowest 10 of existing companies with the lowest market cap, it is
+not an outlier. **So, there are no outliers that need further
+investigation**.
