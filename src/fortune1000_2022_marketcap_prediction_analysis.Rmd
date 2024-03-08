@@ -217,7 +217,28 @@ From the `profit` and revenue `boxplot`, we could conclude that there are some c
 
 8. **Data Quality**: The overall quality of the dataset is assessed.
 
+The assessment of the dataset is summarized in the table below:
 
+**Table of Summary Assessment**
 
+``` {r summary-assessment, echo=TRUE}
+# Check for missing values
+missing_values <- vapply(fortune_df, function(x) sum(is.na(x)), FUN.VALUE = numeric(1))
 
+# Check for duplicate rows
+duplicate_rows <- anyDuplicated(fortune_df)
+
+# Get data types
+data_types <- vapply(fortune_df, function(x) class(x)[1], FUN.VALUE = character(1))
+
+# Combine all into a data frame
+assessment_df <- data.frame(
+  MissingValues = missing_values,
+  DuplicateRows = duplicate_rows,
+  DataTypes = data_types
+)
+
+# Show the assessment table
+assessment_df %>% kable()
+```
 
