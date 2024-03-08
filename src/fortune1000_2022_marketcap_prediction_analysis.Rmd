@@ -463,6 +463,22 @@ ggplot(data = fortune_df) +
   scale_x_log10(labels = scales::dollar)
 ```
 
+```{r distribution-market-cap, echo=TRUE}
+# Create a histogram for the market_cap column
+ggplot(data = fortune_df) +
+  geom_histogram(mapping = aes(x = market_cap), fill = "#15925e", color = "black") +
+  labs(
+    title = "Distribution of Market Cap (Log Scale)",
+    x = "Market Cap"
+  ) +
+  theme(
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.background = element_blank(),
+  ) +
+  scale_x_log10(label = scales::dollar)
+```
+
 
 
 
