@@ -479,6 +479,21 @@ ggplot(data = fortune_df) +
   scale_x_log10(label = scales::dollar)
 ```
 
+```{r distribution-employees, echo=TRUE}
+# Create a histogram for the num_of_employees column
+ggplot(data = fortune_df) +
+  geom_histogram(mapping = aes(x = num_of_employees), fill = "#15925e", color = "black") +
+  labs(
+    title = "Distribution of Number of Employees (Log Scale)",
+    x = "Number of Employees"
+  ) +
+  theme(
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.background = element_blank(),
+  ) +
+  scale_x_log10(label = scales::comma)
+```
 
 
 
