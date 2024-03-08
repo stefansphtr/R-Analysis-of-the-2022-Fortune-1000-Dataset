@@ -345,6 +345,24 @@ missing_values_prev_rank <- sum(is.na(fortune_df$prev_rank))
 glue::glue("The number of missing values in the prev_rank column is {missing_values_prev_rank}.")
 ```
 
+```{r missing-value-market-cap, echo=TRUE}
+# View the records with missing values in the Market Cap feature
+fortune_df %>% 
+  filter(is.na(market_cap)) %>% 
+  kable()
+```
+
+```{r fill-missing-value-market-cap, echo=TRUE}
+# Fill the missing values in the Market Cap using median value
+fortune_df <- fortune_df %>% 
+  mutate(market_cap = ifelse(is.na(market_cap),
+  median(market_cap, na.rm = TRUE), market_cap))
+
+# Check if the missing values in the Market Cap column have been handled
+missing_values_market_cap <- sum(is.na(fortune_df$market_cap))
+glue::glue("The number of missing values in the Market Cap column is {missing_values_market_cap}.")
+```
+
 
 
 
