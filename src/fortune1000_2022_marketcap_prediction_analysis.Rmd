@@ -514,6 +514,145 @@ The distribution of `num_of_employees` have a **left-skewed distribution**, it m
 - The outlier in the `revenue`, `market_cap` and `profit` columns are not handled because it is a common thing in the business world.
 
 
+## Exploratory Data Analysis
+
+list of interesting questions to be answered in the exploratory data analysis:
+
+**1. Predicting Market Cap of New Entrants (Newcomer="yes")**
+
+  - **Univariate Analysis**:
+
+    • **Question**: How is the market cap of existing companies (Newcomer="no") distributed? Are there any outliers that might require further investigation?
+    
+    • **Question**: How do features like revenue, profit, and number of employees for companies entering the list for the first time (Newcomer="yes") compare to existing companies in terms of distribution?
+    
+    • **Question**: What does the distribution of rank change look like for companies that entered the list (Newcomer="yes")?
+
+  - **Bivariate Analysis**:
+
+    • **Question**: Is there a visual relationship between market cap and features like revenue, profit, and number of employees for established companies (Newcomer="no")?
+    
+    • **Question**: How does the rank change of new entrants relate to their market cap?
+    
+    • **Question**: Do these relationships between market cap and other features differ across various sectors? (Use boxplots or violin plots to compare market cap distribution)
+
+  - **Multivariate Analysis**:
+
+    • **Question**: Can we build a machine learning model that accurately predicts the market cap of new entrants (Newcomer="yes") based on all available features (excluding Market Cap)?
+    
+    • **Question**: How well does this model perform in predicting market cap? Evaluate the model's accuracy using relevant metrics like R-squared or mean squared error.
+
+**2. Predicting Market Cap of Existing Companies (Newcomer="no")**
+
+  - **Univariate Analysis**:
+
+    • **Question**: How have the market caps of existing companies changed between 2021 and 2022? What is the distribution of those changes?
+    
+    • **Question**: How have financial metrics like revenue, profit, and number of employees changed for existing companies between 2021 and 2022? Explore the distribution of these changes.
+
+  - **Bivariate Analysis**:
+
+    • **Question**: Is there a relationship between the change in market cap and the changes in features like revenue, profit, and number of employees for existing companies?
+    
+    • **Question**: How does the rank change of existing companies relate to their market cap change?
+
+  - **Multivariate Analysis**:
+
+    • **Question**: Can we build a regression model to predict the market cap change for existing companies based on changes in financial metrics and other relevant features (rank change, sector)?
+    
+    • **Question**: How well does this model perform in predicting the change in market cap for existing companies? Evaluate the model's performance using relevant metrics.
+
+**3. Identifying Key Factors Influencing Market Cap**
+
+  - **Univariate Analysis**:
+
+    • **Question**: How does the market cap of companies differ across different sectors based on their distribution?
+
+  - **Bivariate Analysis**:
+
+    • **Question**: Are there significant differences in market cap distribution within different sectors? Use boxplots or violin plots for comparison.
+    
+    • **Question**: Within each sector, is there a relationship between market cap and categorical features like CEO demographics (CEO founder, CEO woman)?
+
+  - **Multivariate Analysis**:
+
+    • **Question**: Can we build separate regression models for each sector to predict market cap using relevant features (financial metrics, rank change, sector-specific factors)?
+    
+    • **Question**: By comparing the coefficients of these models across sectors, can we identify the most influential factors for market cap in each sector? 
 
 
+Now let's start jump in with the first question.
 
+### Predicting Market Cap of New Entrants (Newcomer="yes")
+
+#### Univariate Analysis
+Question 1: How is the market cap of existing companies (Newcomer="no") distributed? Are there any outliers that might require further investigation?
+
+```{r existing-market-cap-distribution, echo=TRUE}
+# Create a histogram for the market cap of existing companies
+ggplot(data = fortune_df) +
+  geom_histogram(mapping = aes(x = market_cap), fill = "#15925e", color = "black") +
+  labs(
+    title = "Distribution of Market Cap for Existing Companies (Log Scale)",
+    x = "Market Cap"
+  ) +
+  theme(
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.background = element_blank(),
+  ) +
+  scale_x_log10(label = scales::dollar)
+```
+
+
+```{r existing-market-cap-boxplot, echo=TRUE}
+# Create the variable of existing_df for the existing companies
+existing_df <- fortune_df %>% 
+  filter(newcomer == "no")
+
+# Create a boxplot for the market cap of existing companies to identify outliers
+ggplot(data = existing_df) +
+  geom_boxplot(mapping = aes(x = market_cap), fill = "#15925e", color = "black") +
+  labs(
+    title = "Boxplot of Market Cap for Existing Companies (Log Scale)",
+    x = "Market Cap"
+  ) +
+  theme(
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.background = element_blank(),
+  ) +
+  scale_x_log10(label = scales::dollar)
+```
+
+The distribution of the market cap for existing companies is **left-skewed**, with a few companies having very high market caps.
+
+Let's see the list of existing companies with the highest market cap.
+
+```{r highest-market-cap-companies, echo=TRUE}
+# List of companies with the highest market cap
+highest_market_cap_companies <- existing_df %>% 
+  arrange(-market_cap) %>% 
+  head(10)
+
+highest_market_cap_companies %>% kable()
+```
+
+The top 10 of existing companies with the highest market cap are **Apple, Microsoft, Alphabet, Amazon,  Tesla, Berkshire Hathaway, UnitedHealth Group, Visa, Meta Platforms,  and Johnson & Johnson**.
+
+Next, we should check the list of existing companies with the lowest market cap.
+
+```{r lowest-market-cap-companies, echo=TRUE}
+# List of companies with the lowest market cap
+lowest_market_cap_companies <- existing_df %>% 
+  arrange(market_cap) %>% 
+  head(10)
+
+lowest_market_cap_companies %>% kable()
+```
+
+The lowest 10 of existing companies with the lowest market cap are **Cooper-Standard Holdings, NGL Energy Partners, R.R. Donnelley & Sons, Yellow, Vroom, Hovnanian Enterprises, Quad/Graphics, Party City Holdco, Olympic Steel, and Sprague Resources**.
+
+**Conclusion:**
+
+Since **the top 10 of existing companies with the highest market cap are well-known companies**, it is not an outlier. The same thing goes for the lowest 10 of existing companies with the lowest market cap, it is not an outlier. **So, there are no outliers that need further investigation**.
