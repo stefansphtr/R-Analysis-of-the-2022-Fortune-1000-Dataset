@@ -362,7 +362,59 @@ fortune_df <- fortune_df %>%
 missing_values_market_cap <- sum(is.na(fortune_df$market_cap))
 glue::glue("The number of missing values in the Market Cap column is {missing_values_market_cap}.")
 ```
+Now, let's check again for the overall missing values using the skimr package.
 
+```{r missing-values-overall, echo=TRUE}
+# Display the summary statistics of the dataset
+skim_without_charts(fortune_df)
+```
+
+Since the unique values of the ceo feature is 994, It seems that there are duplicate values in the ceo feature. Let's check for the duplicate values in the ceo feature.
+
+```{r duplicate-values-ceo, echo=TRUE}
+# Check for duplicate values in the ceo feature
+duplicate_ceo <- fortune_df %>% 
+  group_by(ceo) %>% 
+  summarize(n = n()) %>%
+  filter(n > 1)
+
+# Display the duplicate values in the ceo feature
+duplicate_ceo %>% kable()
+```
+From the table above, we could see that `Elon Musk` and `Vincent T. Roche` are the CEO of two companies. 
+
+Let's check it out first what companies are they leading.
+
+```{r check-ceo-companies, echo=TRUE}
+# Check the companies that Elon Musk and Vincent T. Roche are leading
+fortune_df %>% 
+  dplyr::filter(ceo == "Elon Musk" | ceo == "Vincent T. Roche") %>%
+  dplyr::select(company, ceo) %>% 
+  kable()
+```
+
+So, it is not a duplicate value, it is a common thing in the business world.
+
+Next, we would like to check the ceo with name `#REF`. Let's check it out first what company is he leading.
+
+```{r check-ceo-ref, echo=TRUE}
+# Check the company that the CEO with name #REF is leading
+fortune_df %>% 
+  dplyr::select(company, ceo) %>% 
+  dplyr::filter(ceo == "#REF!") %>%
+  kable()
+```
+It seems there are companies with the CEO named `#REF!`, this would be causing by the The `#REF!` error typically **appears when a reference is not valid**. This is common in spreadsheet software like Excel, where it can occur if a formula refers to a cell that doesn't exist, usually because the cell's row or column has been deleted.
+
+```{r fill-missing-value-ceo, echo=TRUE}
+# Fill the missing values in the ceo column with "Unknown"
+fortune_df <- fortune_df %>% 
+  mutate(ceo = ifelse(ceo == "#REF!", "Unknown", ceo))
+
+# Check if the invalid values in the ceo column have been handled
+invalid_values_ceo <- sum(fortune_df$ceo == "#REF!")
+glue::glue("The number of invalid values in the ceo column is {invalid_values_ceo}.")
+```
 
 
 
