@@ -495,6 +495,23 @@ ggplot(data = fortune_df) +
   scale_x_log10(label = scales::comma)
 ```
 
+As we can see on the distribution of `revenue` there is a **left-skewed distribution**, it means that there are some companies with a very high revenue. The distribution of `profit` and `market_cap` also have a **left-skewed distribution**, it means that there are some companies with a very high profit and market cap.
+
+The distribution of `num_of_employees` have a **left-skewed distribution**, it means that there are some companies with a very high number of employees.
+
+**Conclusion:**
+
+- The column names have been cleaned and are now consistent and easy to work with.
+
+- The `Market Cap` column has been converted to a **double data type**.
+
+- The missing values in the `profit`, `num_of_employees`, `ticker`, `prev_rank`, and `market_cap` columns have been **handled**.
+
+- The invalid values in the `ceo` column has been handled by filling the missing values with "Unknown".
+
+**Additional Note for the outlier in the `revenue`, `market_cap` and `profit` columns:**
+
+- The outlier in the `revenue`, `market_cap` and `profit` columns are not handled because it is a common thing in the business world.
 
 
 
