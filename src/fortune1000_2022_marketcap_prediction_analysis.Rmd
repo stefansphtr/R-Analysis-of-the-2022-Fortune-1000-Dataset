@@ -57,6 +57,9 @@ library(MASS)
 
 # modelr: Provides functions for modelling that help with data tidying
 library(modelr)
+
+# reshape2: Flexibly restructure and aggregate data
+library(reshape2)
 ```
 
 ## Business Questions
@@ -847,6 +850,221 @@ ggplot(data = fortune_df) +
 **Conclusion**:
 
 Based on the comparison distribution revenue, profit, and number of employees, we can conclude that between new entrants and existing companies, **there are significant differences in the distribution of these features. The distribution of revenue, profit, and number of employees for existing companies is dominating the distribution of new entrants.**
+
+
+Question 3: What does the distribution of rank change look like for companies that entered the list (Newcomer="yes")?
+
+```{r rank-change-distribution, echo=TRUE}
+# Create a histogram for the rank change of new entrants
+ggplot(data = new_entrants_df) +
+  geom_histogram(mapping = aes(x = rank_change), fill = "#15925e", color = "black") +
+  labs(
+    title = "Distribution of Rank Change for New Entrants",
+    x = "Rank Change"
+  ) +
+  theme(
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.background = element_blank(),
+  )
+```
+
+**Conclusion:** 
+
+**There is no rank changes from the new entrants companies** because they are new in the list, and from the cleaning process I fill the missing value in the `prev_rank` column with 0, so the rank change is 0.
+
+#### Bivariate Analysis
+
+Question 1: Is there a visual relationship between market cap and features like revenue, profit, and number of employees for established companies (Newcomer="no")?
+
+```{r relationship-market-cap-revenue, echo=TRUE}
+# Create a scatter plot to visualize the relationship between market cap and revenue
+ggplot(data = existing_df) +
+  geom_point(mapping = aes(x = revenue, y = market_cap), color = "red") +
+  geom_smooth(mapping = aes(x = revenue, y = market_cap), method = "lm", se = FALSE, color = "blue") +
+  labs(
+    title = "Relationship Between Market Cap and Revenue",
+    x = "Revenue",
+    y = "Market Cap"
+  ) +
+  theme(
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.background = element_blank(),
+  ) +
+  scale_x_log10(label = scales::dollar) +
+  scale_y_log10(label = scales::dollar)
+```
+
+```{r relationship-market-cap-profit, echo=TRUE}
+# Create a scatter plot to visualize the relationship between market cap and profit
+ggplot(data = existing_df) +
+  geom_point(mapping = aes(x = profit, y = market_cap), color = "red") +
+  geom_smooth(mapping = aes(x = profit, y = market_cap), method = "lm", se = FALSE, color = "blue") +
+  labs(
+    title = "Relationship Between Market Cap and Profit",
+    x = "Profit",
+    y = "Market Cap"
+  ) +
+  theme(
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.background = element_blank(),
+  ) +
+  scale_x_log10(label = scales::dollar) +
+  scale_y_log10(label = scales::dollar)
+```
+
+```{r relationship-market-cap-employees, echo=TRUE}
+# Create a scatter plot to visualize the relationship between market cap and number of employees
+ggplot(data = existing_df) +
+  geom_point(mapping = aes(x = num_of_employees, y = market_cap), color = "red") +
+  geom_smooth(mapping = aes(x = num_of_employees, y = market_cap), method = "lm", se = FALSE, color = "blue") +
+  labs(
+    title = "Relationship Between Market Cap and Number of Employees",
+    x = "Number of Employees",
+    y = "Market Cap"
+  ) +
+  theme(
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.background = element_blank(),
+  ) +
+  scale_x_log10(label = scales::comma) +
+  scale_y_log10(label = scales::dollar)
+```
+
+Conclusion:
+
+Based on the scatter plots, we can see that there is a **positive linear relationship between market cap and revenue, profit, and number of employees**.
+It means that the higher the revenue, profit, and number of employees, the higher the market cap.
+
+But in the number of employees, the correlation seems not strong enough. Let's see the correlation between the market cap and the revenue, profit, and number of employees.
+
+```{r correlation-market-cap, echo=TRUE}
+# Calculate the correlation between market cap and revenue, profit, and number of employees
+correlation_market_cap <- existing_df %>% 
+  dplyr::select(market_cap, revenue, profit, num_of_employees) %>% 
+  cor()
+
+correlation_market_cap %>% kable()
+```
+
+It seems hard to see the correlation between the market cap and the revenue, profit, and number of employees from the table above. Let's visualize it using the `heatmap`.
+
+```{r heatmap-correlation-market-cap, echo=TRUE}
+# Convert the correlation matrix to a data frame
+correlation_df <- reshape2::melt(correlation_market_cap)
+
+# Create the heatmap
+ggplot(data = correlation_df, aes(x = Var1, y = Var2, fill = value)) +
+  geom_tile() +
+  scale_fill_gradient2(low = "blue", mid = "white", high = "red", midpoint = 0, limits = c(-1, 1)) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 45, vjust = 1, size = 12, hjust = 1),
+    axis.text.y = element_text(size = 12),
+    axis.title = element_text(size = 14),
+    legend.position = "none"
+  ) +
+  labs(
+    title = "Correlation Between Market Cap and Revenue, Profit, and Number of Employees",
+    x = "Features",
+    y = "Features"
+  )
+```
+
+**Conclusion:**
+
+Based on the heatmap, we can see that there is a **strong positive correlation between market cap and revenue and profit**. But, there is a **weak positive correlation between market cap and the number of employees**, this means that the higher the revenue and profit, the higher the market cap, but number of employees has a small effect on the market cap.
+
+Question 2: How does the rank change of new entrants relate to their market cap?
+
+```{r relationship-rank-change-market-cap, echo=TRUE}
+# Create a scatter plot to visualize the relationship between rank change and market cap for new entrants
+ggplot(data = new_entrants_df) +
+  geom_point(mapping = aes(x = rank_change, y = market_cap), color = "red") +
+  geom_smooth(mapping = aes(x = rank_change, y = market_cap), method = "lm", se = FALSE, color = "blue") +
+  labs(
+    title = "Relationship Between Rank Change and Market Cap for New Entrants",
+    x = "Rank Change",
+    y = "Market Cap"
+  ) +
+  theme(
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.background = element_blank(),
+  )
+```
+
+**Conclusion:**
+
+There are no rank changes from the new entrants companies because they are new in the list, and from the cleaning process I fill the missing value in the `prev_rank` column with 0, so the rank change is 0, and the **market cap is not affected by the rank changes for the new entrants company**.
+
+Question 3: Do these relationships between market cap and other features differ across various sectors? (Use boxplots or violin plots to compare market cap distribution)
+
+```{r relationship-market-cap-sector, echo=TRUE}
+# Use the facet_wrap function to create separate boxplots for each sector
+ggplot(data = existing_df) +
+  geom_boxplot(mapping = aes(x = sector, y = market_cap), fill = "#15925e", color = "black") +
+  labs(
+    title = "Comparison of Market Cap Distribution Across Various Sectors",
+    x = "Sector",
+    y = "Market Cap"
+  ) +
+  theme(
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.background = element_blank(),
+    axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1),
+    plot.title = element_text(size = 2)
+  ) +
+  scale_y_log10(label = scales::dollar) +
+  facet_wrap(~sector, scales = "free")
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
