@@ -9,7 +9,7 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE, fig.path = "../figures/")
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE, fig.path = "../figures/", fig.width = 12, fig.height = 8, fig.align = "center")
 ```
 
 ## Introduction
@@ -1003,29 +1003,45 @@ There are no rank changes from the new entrants companies because they are new i
 
 Question 3: Do these relationships between market cap and other features differ across various sectors? (Use boxplots or violin plots to compare market cap distribution)
 
-```{r relationship-market-cap-sector, echo=TRUE}
-# Use the facet_wrap function to create separate boxplots for each sector
+```{r relationship-market-cap-sector, fig.width=20, fig.height=15, echo=TRUE}
+# Define the aesthetics for the boxplot
+boxplot_aesthetics <- aes(x = sector, y = market_cap)
+
+# Define the boxplot geometry
+boxplot_geometry <- geom_boxplot(fill = "#15925e", color = "black")
+
+# Define the labels for the plot
+plot_labels <- labs(
+  title = "Comparison of Market Cap Distribution Across Various Sectors",
+  x = "Sector",
+  y = "Market Cap"
+)
+
+# Define the theme for the plot
+plot_theme <- theme(
+  panel.grid.major = element_blank(),
+  panel.grid.minor = element_blank(),
+  panel.background = element_blank(),
+  axis.text.x = element_text(size = 10, vjust = 1, hjust = 0.5),
+  plot.title = element_text(size = 30, hjust = 0.5, margin = margin(t = 0, r = 0, b = 30, l = 0))
+)
+
+# Define the scale for the y-axis
+y_axis_scale <- scale_y_log10(label = scales::dollar)
+
+# Create the plot
 ggplot(data = existing_df) +
-  geom_boxplot(mapping = aes(x = sector, y = market_cap), fill = "#15925e", color = "black") +
-  labs(
-    title = "Comparison of Market Cap Distribution Across Various Sectors",
-    x = "Sector",
-    y = "Market Cap"
-  ) +
-  theme(
-    panel.grid.major = element_blank(),
-    panel.grid.minor = element_blank(),
-    panel.background = element_blank(),
-    axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1),
-    plot.title = element_text(size = 2)
-  ) +
-  scale_y_log10(label = scales::dollar) +
+  boxplot_aesthetics +
+  boxplot_geometry +
+  plot_labels +
+  plot_theme +
+  y_axis_scale +
   facet_wrap(~sector, scales = "free")
 ```
 
+**Conclusion:**
 
-
-
+Based on the boxplot, we can see that **the distribution of market cap differs across various sectors**. The `Technology, Financials, and Apparel` sector has widely distributed market capitalization with **some of the companies leading the market cap**, while the **other sector has a narrow distribution** of market capitalization.
 
 
 
