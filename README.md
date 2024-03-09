@@ -43,3 +43,9 @@ replacing the previous data from 2021.
 | website         | The url of the company website |
 | ticker          | The stock ticker symbol of public companies. Some rows will have empty values because the company is a private corporation. |
 | market_cap      | The market cap (or value) of the company in millions. Some rows will have empty values because the company is private. Market valuations were determined on January 20, 2021. |
+
+## Project Link
+
+You can access the project at the following URL:
+
+[https://stefansphtr.github.io/R-Analysis-of-the-2022-Fortune-1000-Dataset/](https://stefansphtr.github.io/R-Analysis-of-the-2022-Fortune-1000-Dataset/)
