@@ -1185,3 +1185,20 @@ sector_highest_market_cap <- fortune_df %>%
 glue::glue("The sector with the highest market cap is {sector_highest_market_cap$sector} with an average market cap of {scales::dollar(sector_highest_market_cap$average_market_cap)}.")
 ```
 
+## Summary of Analysis
+
+The analysis of the dataset has been completed, and the following are the key findings:
+
+```{r summary-analysis, echo=FALSE}
+summary_df <- data.frame(
+  Step = c("Data Cleaning", "Univariate Analysis", "Bivariate Analysis", "Handling Outliers", "Missing Values", "Duplicate Rows"),
+  Description = c("The column names were cleaned for consistency and ease of use. The `Market Cap` column was converted to a double data type. Missing values in the `profit`, `num_of_employees`, `ticker`, `prev_rank`, and `market_cap` columns were handled. Invalid values in the `ceo` column were filled with 'Unknown'.",
+                  "The distribution of `market_cap`, `revenue`, `profit`, and `num_of_employees` were analyzed. It was found that these distributions are left-skewed, indicating the presence of some companies with very high values in these categories.",
+                  "A scatter plot was created to visualize the relationship between `market_cap` and `revenue`.",
+                  "Outliers in the `revenue`, `market_cap`, and `profit` columns were not handled as they are common in the business world.",
+                  "Missing values in the `Ticker` and `Market Cap` columns were identified. The missing `Ticker` values indicate private companies, while the missing `Market Cap` value needs to be handled as it's important for the analysis. Similarly, missing values in the `profit` and `num. of employees` columns need to be handled.",
+                  "The `duplicated()` function was used to check for duplicate rows in the dataset. It was found that there are no duplicate rows.")
+)
+
+knitr::kable(summary_df, caption = "Summary of Analysis")
+```
