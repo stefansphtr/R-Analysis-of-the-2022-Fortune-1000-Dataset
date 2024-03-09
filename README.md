@@ -1,6 +1,23 @@
-# Capstone Project Data Analytics: R Analysis of the 2022 Fortune 1000 for Market Cap Prediction
+# Capstone Project Data Analytics: R Analysis of the 2022 Fortune 1000 Dataset
 ---
 ---
+## Data Analysis Summary
+**The objective of this capstone project is** to analyze the 2022
+Fortune 1000 firms in order **to analyze and gain insight from the data**. The dataset is sourced from the Kaggle website: [2022 Fortune
+1000](https://www.kaggle.com/datasets/winston56/fortune-500-data-2021/data).
+The **dataset provides updated U.S. firm data for the year 2022**,
+replacing the previous data from 2021.
+
+### Table of Data Analysis Summary
+
+| Step               | Description                                                                                                                                                                                                                                                                                                                                 |
+|--------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Data Cleaning      | The column names were cleaned for consistency and ease of use. The Market Cap column was converted to a double data type. Missing values in the profit, num_of_employees, ticker, prev_rank, and market_cap columns were handled. Invalid values in the ceo column were filled with ‘Unknown’.                                               |
+| Univariate Analysis| The distribution of market_cap, revenue, profit, and num_of_employees were analyzed. It was found that these distributions are left-skewed, indicating the presence of some companies with very high values in these categories.                                                                                                                |
+| Bivariate Analysis | A scatter plot was created to visualize the relationship between market_cap and revenue.                                                                                                                                                                                                                                                    |
+| Handling Outliers  | Outliers in the revenue, market_cap, and profit columns were not handled as they are common in the business world.                                                                                                                                                                                                                           |
+| Missing Values     | Missing values in the Ticker and Market Cap columns were identified. The missing Ticker values indicate private companies, while the missing Market Cap value needs to be handled as it’s important for the analysis. Similarly, missing values in the profit and num. of employees columns need to be handled.                               |
+| Duplicate Rows     | The duplicated() function was used to check for duplicate rows in the dataset. It was found that there are no duplicate rows.                                                                                                                                                                                                               |
 
 ## Data Dictionary
 
