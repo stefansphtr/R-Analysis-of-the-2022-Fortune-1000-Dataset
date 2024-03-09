@@ -57,11 +57,18 @@ analysis:
 ```{r table-business-question, echo=FALSE}
 # Define the business questions
 business_questions <- data.frame(
-  'No.' = c(1, 2, 3),
+  'No.' = c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10),
   'Business_Question' = c(
-    'How can we accurately predict the market cap of companies entering the Fortune 1000 list for the first time (Newcomer="yes") based on the available data from the previous year (2022)?',
-    'How can we predict the future market cap of companies already present on the 2022 Fortune 1000 list (Newcomer="no") by analyzing the changes in their financial metrics like revenue, profit, and number of employees, along with other factors like rank change, CEO demographics, and sector?',
-    'What are the key factors (financial, company-related, or others) that have the most significant influence on the market cap of companies within different sectors present in the Fortune 1000 list?'
+    'What percentage of companies have women ceo\'s?',
+    'How many companies are newcomers?',
+    'What percentage of companies have ceos who were also founders?',
+    'What role does profitability play in ranking?',
+    'How many companies with a market cap of over $100 billion are there?',
+    'What is the average revenue of companies with a market cap of over $100 billion?',
+    'What is the average profit of companies with a market cap of over $100 billion?',
+    'What is the average number of employees of companies with a market cap of over $100 billion?',
+    'What is the average rank of companies with a market cap of over $100 billion?',
+    'What is the sector with the highest average market cap?'
   )
 )
 
@@ -581,7 +588,7 @@ number of employees.
 list of interesting questions to be answered in the exploratory data
 analysis:
 
-**1. Predicting Market Cap of New Entrants (Newcomer="yes")**
+**Pre-analysis to see the statistic of the dataset**
 
 -   **Univariate Analysis**:
 
@@ -610,77 +617,11 @@ analysis:
     features differ across various sectors? (Use boxplots or violin
     plots to compare market cap distribution)
 
--   **Multivariate Analysis**:
 
-    • **Question**: Can we build a machine learning model that
-    accurately predicts the market cap of new entrants (Newcomer="yes")
-    based on all available features (excluding Market Cap)?
 
-    • **Question**: How well does this model perform in predicting
-    market cap? Evaluate the model's accuracy using relevant metrics
-    like R-squared or mean squared error.
+Now let's start analyze the statistic of the dataset.
 
-**2. Predicting Market Cap of Existing Companies (Newcomer="no")**
-
--   **Univariate Analysis**:
-
-    • **Question**: How have the market caps of existing companies
-    changed between 2021 and 2022? What is the distribution of those
-    changes?
-
-    • **Question**: How have financial metrics like revenue, profit, and
-    number of employees changed for existing companies between 2021 and
-    2022? Explore the distribution of these changes.
-
--   **Bivariate Analysis**:
-
-    • **Question**: Is there a relationship between the change in market
-    cap and the changes in features like revenue, profit, and number of
-    employees for existing companies?
-
-    • **Question**: How does the rank change of existing companies
-    relate to their market cap change?
-
--   **Multivariate Analysis**:
-
-    • **Question**: Can we build a regression model to predict the
-    market cap change for existing companies based on changes in
-    financial metrics and other relevant features (rank change, sector)?
-
-    • **Question**: How well does this model perform in predicting the
-    change in market cap for existing companies? Evaluate the model's
-    performance using relevant metrics.
-
-**3. Identifying Key Factors Influencing Market Cap**
-
--   **Univariate Analysis**:
-
-    • **Question**: How does the market cap of companies differ across
-    different sectors based on their distribution?
-
--   **Bivariate Analysis**:
-
-    • **Question**: Are there significant differences in market cap
-    distribution within different sectors? Use boxplots or violin plots
-    for comparison.
-
-    • **Question**: Within each sector, is there a relationship between
-    market cap and categorical features like CEO demographics (CEO
-    founder, CEO woman)?
-
--   **Multivariate Analysis**:
-
-    • **Question**: Can we build separate regression models for each
-    sector to predict market cap using relevant features (financial
-    metrics, rank change, sector-specific factors)?
-
-    • **Question**: By comparing the coefficients of these models across
-    sectors, can we identify the most influential factors for market cap
-    in each sector?
-
-Now let's start jump in with the first question.
-
-### Predicting Market Cap of New Entrants (Newcomer="yes")
+### Pre-analysis Statistic
 
 #### Univariate Analysis
 
@@ -1030,44 +971,217 @@ ggplot(data = existing_df) +
 
 Based on the boxplot, we can see that **the distribution of market cap differs across various sectors**. The `Technology, Financials, and Apparel` sector has widely distributed market capitalization with **some of the companies leading the market cap**, while the **other sector has a narrow distribution** of market capitalization.
 
+### Answer the Questions
+
+**Question 1: What percentage of companies have women ceo's?**
+
+```{r percentage-women-ceo, echo=TRUE}
+# Calculate the percentage of companies with woman ceo
+percentage_women_ceo <- fortune_df %>% 
+  dplyr::filter(ceo_woman == "yes") %>% 
+  nrow() / fortune_df %>%
+  nrow() * 100
+
+glue::glue("The percentage of companies who have women ceo is {percentage_women_ceo}%.")
+```
+```{r pie-chart-pct-women-ceo, echo=TRUE, fig.width=10, fig.height=8}
+# Calculate the number of companies with and without a woman CEO
+ceo_gender_df <- fortune_df %>% 
+  dplyr::group_by(ceo_woman) %>% 
+  dplyr::summarise(n = n()) %>% 
+  dplyr::mutate(freq = n / sum(n))
+
+# Create the pie chart
+ggplot(ceo_gender_df, aes(x = "", y = freq, fill = ceo_woman)) +
+  geom_bar(width = 1, stat = "identity") +
+  coord_polar("y", start = 0) +
+  theme_void() +
+  labs(fill = "Women CEO",
+       title = "Percentage of Companies with Women CEOs") +
+  scale_fill_manual(values = c("yes" = "blue", "no" = "red")) +
+  geom_text(aes(label = scales::percent(freq)),
+            position = position_stack(vjust = 0.5)) +
+  theme(
+    plot.title = element_text(size = 20, hjust = 0.5, margin = margin(t = 30, r = 0, b = 10, l = 0)),
+  )
+```
+
+The companies with women CEO's are **only 8%** from the total companies.
+
+**Question 2: How many companies are newcomers?**
+
+```{r count-newcomers, echo=TRUE}
+# Calculate the newcomers company
+newcomers_count <- fortune_df %>% 
+  dplyr::filter(newcomer == "yes") %>% 
+  nrow()
+
+glue::glue("The number of newcomers companies is {newcomers_count}.")
+
+# Calculate the percentage of newcomers company
+percentage_newcomers <- newcomers_count / fortune_df %>%
+  nrow() * 100
+
+glue::glue("The percentage of newcomers companies is {percentage_newcomers}%.")
+```
+Based on the calculation, there are only **3%** of newcomers companies from the total companies in the 1000 Fortune 2022.
+
+**Question 3: What percentage of companies have ceos who were also the founders?**
+
+```{r percentage-founder-ceo, echo=TRUE}
+# Calculate the percentage of companies with founder ceo
+percentage_founder_ceo <- fortune_df %>% 
+  dplyr::filter(ceo_founder == "yes") %>% 
+  nrow() / fortune_df %>%
+  nrow() * 100
+
+glue::glue("The percentage of companies who have founder ceo is {percentage_founder_ceo}%.")
+```
+
+```{r pie-chart-pct-founder-ceo, echo=TRUE, fig.width=10, fig.height=8}
+# Calculate the number of companies with and without a founder CEO
+ceo_founder_df <- fortune_df %>% 
+  dplyr::group_by(ceo_founder) %>% 
+  dplyr::summarise(n = n()) %>% 
+  dplyr::mutate(freq = n / sum(n))
+
+# Create the pie chart
+ggplot(ceo_founder_df, aes(x = "", y = freq, fill = ceo_founder)) +
+  geom_bar(width = 1, stat = "identity") +
+  coord_polar("y", start = 0) +
+  theme_void() +
+  labs(fill = "Founder CEO",
+       title = "Percentage of Companies with Founder CEOs") +
+  scale_fill_manual(values = c("yes" = "blue", "no" = "red")) +
+  geom_text(aes(label = scales::percent(freq)),
+            position = position_stack(vjust = 0.5)) +
+  theme(
+    plot.title = element_text(size = 20, hjust = 0.5, margin = margin(t = 30, r = 0, b = 10, l = 0)),
+  )
+```
+Company with founder CEO's are **only 6%** from the total companies.
 
 
 
+**Question 4: What role does profitability play in ranking?**
+
+```{r role-profitability-ranking, echo=TRUE}
+# Create a scatter plot to visualize the relationship between profit and rank
+ggplot(data = fortune_df) +
+  geom_point(mapping = aes(x = rank, y = profit), color = "red") +
+  geom_smooth(mapping = aes(x = rank, y = profit), method = "lm", se = FALSE, color = "blue") +
+  labs(
+    title = "Relationship Between Profit and Rank",
+    x = "Rank",
+    y = "Profit"
+  ) +
+  theme(
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.background = element_blank(),
+    plot.title = element_text(size = 20, hjust = 0.5, margin = margin(t = 10, r = 0, b = 10, l = 0))
+  )
+```
+
+Based on the scatter plot, we can see that there is a **slightly negative correlation between the profit and rank**. It means that only the top 100 companies have a high profit, and the other companies have a low and narrow profit distribution.
+
+**Question 5: What percentage of companies with a market cap over $100 billion?**
+
+```{r percent-company-above-100-billion-market-cap, echo=TRUE}
+# Calculate the percentage of companies with a market cap over $100 billion
+percentage_above_100_billion <- fortune_df %>% 
+  dplyr::filter(market_cap > 100000) %>% 
+  nrow() / fortune_df %>%
+  nrow() * 100
+
+glue::glue("The percentage of companies with a market cap over $100 billion is {percentage_above_100_billion}%.")
+
+```
+```{r pie-chart-pct-market-cap, echo=TRUE, fig.width=10, fig.height=8}
+# Calculate the number of companies with a market cap over $100 billion
+market_cap_df <- fortune_df %>% 
+  dplyr::mutate(market_cap_group = ifelse(market_cap > 100000, "Over $100 Billion", "Under $100 Billion")) %>%
+  dplyr::group_by(market_cap_group) %>% 
+  dplyr::summarise(n = n()) %>% 
+  dplyr::mutate(freq = n / sum(n))
+
+# Create the pie chart
+ggplot(market_cap_df, aes(x = "", y = freq, fill = market_cap_group)) +
+  geom_bar(width = 1, stat = "identity") +
+  coord_polar("y", start = 0) +
+  theme_void() +
+  labs(fill = "Market Cap",
+       title = "Percentage of Companies with Market Cap > $100 Billion") +
+  scale_fill_manual(values = c("Over $100 Billion" = "blue", "Under $100 Billion" = "red")) +
+  geom_text(aes(label = scales::percent(freq)),
+            position = position_stack(vjust = 0.5)) +
+  theme(
+    plot.title = element_text(size = 20, hjust = 0.5, margin = margin(t = 30, r = 0, b = 10, l = 0)),
+  )
+```
+
+The percentage of company with market cap over $100 billion is **only 7%** from the total companies, this means some of the companies have a very high market cap.
 
 
+**Question 6: What is the average revenue of companies with a market cap over $100 billion?**
+
+```{r average-revenue-above-100-billion-market-cap, echo=TRUE}
+# Calculate the average revenue of companies with a market cap over $100 billion
+average_revenue_above_100_billion <- fortune_df %>% 
+  dplyr::filter(market_cap > 100000) %>% 
+  dplyr::summarise(average_revenue = mean(revenue, na.rm = TRUE))
+
+glue::glue("The average revenue of companies with a market cap over $100 billion is {scales::dollar(average_revenue_above_100_billion$average_revenue)}.")
+```
+
+The average revenue of companies with a market cap over $100 billion is **$92,017.60**.
+
+**Question 7: What is the average profit of companies with a market cap over $100 billion?**
+
+```{r average-profit-above-100-billion-market-cap, echo=TRUE}
+# Calculate the average profit of companies with a market cap over $100 billion
+average_profit_above_100_billion <- fortune_df %>% 
+  dplyr::filter(market_cap > 100000) %>% 
+  dplyr::summarise(average_profit = mean(profit, na.rm = TRUE))
+
+glue::glue("The average profit of companies with a market cap over $100 billion is {scales::dollar(average_profit_above_100_billion$average_profit)}.")
+```
+So, the average profit of companies with a market cap over $100 billion is **$15,145.78**.
+
+**Question 8: What is the average number of employees of companies with a market cap over $100 billion?**
+
+```{r average-employees-above-100-billion-market-cap, echo=TRUE}
+# Calculate the average number of employees of companies with a market cap over $100 billion
+average_employees_above_100_billion <- fortune_df %>% 
+  dplyr::filter(market_cap > 100000) %>% 
+  dplyr::summarise(average_employees = mean(num_of_employees, na.rm = TRUE))
+
+glue::glue("The average number of employees of companies with a market cap over $100 billion is {scales::comma(average_employees_above_100_billion$average_employees)}.")
+```
+
+The average number of employees of companies with a market cap over $100 billion is **168,427**
 
 
+**Question 9: What is the average rank of companies with a market cap over $100 billion?**
 
+```{r average-rank-above-100-billion-market-cap, echo=TRUE}
+# Calculate the average rank of companies with a market cap over $100 billion
+average_rank_above_100_billion <- fortune_df %>% 
+  dplyr::filter(market_cap > 100000) %>% 
+  dplyr::summarise(average_rank = mean(rank, na.rm = TRUE))
 
+glue::glue("The average rank of companies with a market cap over $100 billion is {round(average_rank_above_100_billion$average_rank)}.")
+```
+**Question 10: What is the sector with the highest market cap?**
 
+```{r sector-highest-market-cap, echo=TRUE}
+# Calculate the sector with the highest market cap
+sector_highest_market_cap <- fortune_df %>% 
+  dplyr::group_by(sector) %>% 
+  dplyr::summarise(average_market_cap = mean(market_cap, na.rm = TRUE)) %>% 
+  dplyr::arrange(-average_market_cap) %>% 
+  head(1)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+glue::glue("The sector with the highest market cap is {sector_highest_market_cap$sector} with an average market cap of {scales::dollar(sector_highest_market_cap$average_market_cap)}.")
+```
 
