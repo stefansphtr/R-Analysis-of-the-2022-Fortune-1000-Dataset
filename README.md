@@ -1,5 +1,8 @@
 # Capstone Project Data Analytics: R Analysis of the 2022 Fortune 1000 Dataset
 ---
+
+![Repo Display](./src/assets/repo-display.jpg)
+
 ---
 ## Data Analysis Summary
 **The objective of this capstone project is** to analyze the 2022
