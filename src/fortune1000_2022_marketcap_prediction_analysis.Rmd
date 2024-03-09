@@ -45,23 +45,8 @@ library(janitor)
 # skimr: Provides summary statistics for data exploration
 library(skimr)
 
-# broom: Converts statistical analysis objects into tidy format
-library(broom)
-
-# car: Companion to Applied Regression, provides tools for regression analysis
-library(car)
-
-# MASS: Support functions and datasets for Venables and Ripley's MASS
-library(MASS)
-
-# modelr: Provides functions for modelling that help with data tidying
-library(modelr)
-
 # reshape2: Flexibly restructure and aggregate data
 library(reshape2)
-
-# caret: Provides a set of functions for training and plotting classification and regression models
-library(caret)
 ```
 
 ## Business Questions
