@@ -1,3 +1,17 @@
+<p align="center">
+  <a href="#">
+    <img src="https://badges.pufler.dev/visits/stefansphtr/R-Analysis-of-the-2022-Fortune-1000-Dataset" alt="Visits Badge">
+    <img src="https://badges.pufler.dev/updated/stefansphtr/R-Analysis-of-the-2022-Fortune-1000-Dataset" alt="Updated Badge">
+    <img src="https://badges.pufler.dev/created/stefansphtr/R-Analysis-of-the-2022-Fortune-1000-Dataset" alt="Created Badge">
+    <img src="https://img.shields.io/github/contributors/stefansphtr/R-Analysis-of-the-2022-Fortune-1000-Dataset" alt="Contributors Badge">
+    <img src="https://img.shields.io/github/last-commit/stefansphtr/R-Analysis-of-the-2022-Fortune-1000-Dataset" alt="Last Commit Badge">
+    <img src="https://img.shields.io/github/commit-activity/m/stefansphtr/R-Analysis-of-the-2022-Fortune-1000-Dataset" alt="Commit Activity Badge">
+    <img src="https://img.shields.io/github/repo-size/stefansphtr/R-Analysis-of-the-2022-Fortune-1000-Dataset" alt="Repo Size Badge">
+    <img src="https://img.shields.io/badge/contributions-welcome-orange.svg" alt="Contributions welcome">
+  </a>
+</p>
+
+
 # Capstone Project Data Analytics: R Analysis of the 2022 Fortune 1000 Dataset
 ---
 
