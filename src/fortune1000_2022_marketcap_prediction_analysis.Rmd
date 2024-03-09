@@ -1,5 +1,5 @@
 ---
-title: "R Analysis of the 2022 Fortune 1000 for Market Cap Prediction"
+title: "R Analysis of the 2022 Fortune 1000 Dataset"
 author: "Stefanus Bernard Melkisedek"
 date: "2024-03-07"
 output: 
@@ -60,6 +60,9 @@ library(modelr)
 
 # reshape2: Flexibly restructure and aggregate data
 library(reshape2)
+
+# caret: Provides a set of functions for training and plotting classification and regression models
+library(caret)
 ```
 
 ## Business Questions
@@ -1042,8 +1045,6 @@ ggplot(data = existing_df) +
 **Conclusion:**
 
 Based on the boxplot, we can see that **the distribution of market cap differs across various sectors**. The `Technology, Financials, and Apparel` sector has widely distributed market capitalization with **some of the companies leading the market cap**, while the **other sector has a narrow distribution** of market capitalization.
-
-
 
 
 
